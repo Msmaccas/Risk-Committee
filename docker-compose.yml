@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  riskcommittee:
+    build: .
+    ports:
+      - "3001:3001"   # API server
+      - "3000:3000"   # Next.js web app
+    environment:
+      - DATABASE_URL=/app/data/riskcommittee.sqlite
+      - BROKER_ENABLED=false
+      - WEB_ENABLED=true
+    volumes:
+      - riskcommittee-db:/app/data
+    restart: unless-stopped
+
+volumes:
+  riskcommittee-db:
+    driver: local

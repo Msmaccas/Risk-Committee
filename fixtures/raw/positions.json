@@ -1,0 +1,14 @@
+[
+  {
+    "symbol": "MSFT",
+    "quantity": 20,
+    "costBasis": 280.0,
+    "entryDate": "2025-01-01"
+  },
+  {
+    "symbol": "GOOGL",
+    "quantity": 15,
+    "costBasis": 150.0,
+    "entryDate": "2025-03-15"
+  }
+]

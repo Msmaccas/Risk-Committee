@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../dist/packages/server/src",
+    "rootDir": "src"
+    ,"composite": true
+    ,"tsBuildInfoFile": "../../dist/packages/server/.tsbuildinfo"
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../core" },
+    { "path": "../data" },
+    { "path": "../providers" },
+    { "path": "../agents" },
+    { "path": "../workflows" },
+    { "path": "../reports" }
+  ]
+}

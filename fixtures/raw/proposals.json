@@ -1,0 +1,20 @@
+[
+  {
+    "id": "prop1",
+    "symbol": "AAPL",
+    "desiredQuantity": 100,
+    "rationale": "Belief in strong fundamentals and resilient earnings."
+  },
+  {
+    "id": "prop2",
+    "symbol": "TSLA",
+    "desiredQuantity": 50,
+    "rationale": "High growth potential but acknowledges volatility."
+  },
+  {
+    "id": "prop3",
+    "symbol": "NFLX",
+    "desiredQuantity": 30,
+    "rationale": "Strong subscriber growth with upcoming event risk."
+  }
+]

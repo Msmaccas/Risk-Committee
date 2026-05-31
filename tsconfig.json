@@ -1,0 +1,14 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/core" },
+    { "path": "packages/data" },
+    { "path": "packages/providers" },
+    { "path": "packages/agents" },
+    { "path": "packages/workflows" },
+    { "path": "packages/reports" },
+    { "path": "packages/server" },
+    { "path": "packages/worker" },
+    { "path": "scripts" }
+  ]
+}

@@ -1,0 +1,85 @@
+import assert from 'assert';
+import { aggregateDecisions, riskManager } from '../packages/agents/src/index';
+import { DecisionType, Proposal, PositionContext, EntityState } from '../packages/core/src/index';
+
+/**
+ * Minimal test runner without external dependencies.  Each test throws
+ * on failure; otherwise the script exits with code 0.
+ */
+async function run(): Promise<void> {
+  // Test aggregateDecisions priority ordering
+  {
+    const artifacts = [
+      { agent: 'A', decision: DecisionType.MONITOR, confidence: 0.5, rationale: '' },
+      { agent: 'B', decision: DecisionType.DEFER, confidence: 0.5, rationale: '' },
+      { agent: 'C', decision: DecisionType.ADD, confidence: 0.5, rationale: '' }
+    ];
+    const result = aggregateDecisions(artifacts as any);
+    assert.strictEqual(result, DecisionType.DEFER, 'aggregateDecisions should return DEFER when present');
+  }
+  // Test riskManager defers on high volatility
+  {
+    const proposal: Proposal = { id: 'test', symbol: 'TEST', desiredQuantity: 1 };
+    const context: PositionContext = {
+      positions: [],
+      realisedVolatility: {
+        source: 'mock',
+        providerTimestamp: new Date(),
+        receivedTimestamp: new Date(),
+        confidence: 0.9,
+        state: EntityState.OK,
+        warnings: [],
+        schemaVersion: '1.0.0',
+        data: 0.6
+      },
+      factorExposure: {
+        source: 'mock',
+        providerTimestamp: new Date(),
+        receivedTimestamp: new Date(),
+        confidence: 0.9,
+        state: EntityState.OK,
+        warnings: [],
+        schemaVersion: '1.0.0',
+        data: { growth: 1 }
+      },
+      sectorExposure: {
+        source: 'mock',
+        providerTimestamp: new Date(),
+        receivedTimestamp: new Date(),
+        confidence: 0.9,
+        state: EntityState.NOT_AVAILABLE,
+        warnings: ['not implemented'],
+        schemaVersion: '1.0.0',
+        missingReason: 'not implemented'
+      },
+      eventRisk: {
+        source: 'mock',
+        providerTimestamp: new Date(),
+        receivedTimestamp: new Date(),
+        confidence: 0.9,
+        state: EntityState.OK,
+        warnings: [],
+        schemaVersion: '1.0.0',
+        data: { none: 0.1 }
+      },
+      liquidity: {
+        source: 'mock',
+        providerTimestamp: new Date(),
+        receivedTimestamp: new Date(),
+        confidence: 0.9,
+        state: EntityState.OK,
+        warnings: [],
+        schemaVersion: '1.0.0',
+        data: { liquidity: 1 }
+      }
+    };
+    const res = await riskManager(proposal, context);
+    assert.strictEqual(res.decision, DecisionType.DEFER, 'riskManager should defer on volatility > 0.4');
+  }
+  console.log('All tests passed');
+}
+
+run().catch(err => {
+  console.error(err);
+  process.exit(1);
+});

@@ -1,0 +1,38 @@
+#!/bin/bash
+# Simple hygiene check script.  It scans the git index for forbidden
+# artifacts such as compiled output, node modules or editor files.  If any
+# offending files are found, the script exits with non‑zero status.
+
+set -euo pipefail
+
+errors=0
+
+# Iterate over tracked files
+while IFS= read -r file; do
+  case "$file" in
+    # forbid committing compiled output directories
+    dist/*)
+      echo "Hygiene error: dist artifact is tracked ($file)" >&2
+      errors=1
+      ;;
+    node_modules/*)
+      echo "Hygiene error: node_modules should not be committed ($file)" >&2
+      errors=1
+      ;;
+    *.tsbuildinfo)
+      echo "Hygiene error: TypeScript build info file committed ($file)" >&2
+      errors=1
+      ;;
+    *.swp|*.swo)
+      echo "Hygiene error: editor swap file committed ($file)" >&2
+      errors=1
+      ;;
+  esac
+done < <(git ls-files)
+
+if [[ $errors -ne 0 ]]; then
+  echo "Repository hygiene check failed.  Please remove the above files." >&2
+  exit 1
+fi
+
+echo "Repository hygiene check passed."
